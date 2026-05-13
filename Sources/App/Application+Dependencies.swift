@@ -13,6 +13,8 @@ public struct AppDependencies: Sendable {
     let postService: PostService
     let likeService: LikeService
     let commentService: CommentService
+    let adminDashboardService: AdminDashboardService
+    let adminCatalogService: AdminCatalogService
     public let profileService: ProfileService
     public let seeder: DatabaseSeeder
 
@@ -31,6 +33,8 @@ public struct AppDependencies: Sendable {
         self.postService = PostService()
         self.likeService = LikeService()
         self.commentService = CommentService()
+        self.adminDashboardService = AdminDashboardService()
+        self.adminCatalogService = AdminCatalogService()
         self.profileService = ProfileService(garments: garmentRepository)
         self.seeder = DatabaseSeeder()
     }

@@ -7,6 +7,7 @@ public struct User: Sendable, Hashable {
     public let email: String
     public let avatarURL: String?
     public let bio: String?
+    public let role: UserRole
 
     public init(
         id: UUID,
@@ -14,7 +15,8 @@ public struct User: Sendable, Hashable {
         displayName: String,
         email: String,
         avatarURL: String?,
-        bio: String? = nil
+        bio: String? = nil,
+        role: UserRole = .user
     ) {
         self.id = id
         self.username = username
@@ -22,5 +24,10 @@ public struct User: Sendable, Hashable {
         self.email = email
         self.avatarURL = avatarURL
         self.bio = bio
+        self.role = role
+    }
+
+    public var isAdmin: Bool {
+        role == .admin
     }
 }

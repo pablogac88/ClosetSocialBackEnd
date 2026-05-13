@@ -36,6 +36,7 @@ struct DebugController: Sendable {
               <td>\(user.username.htmlEscaped)</td>
               <td>\(user.displayName.htmlEscaped)</td>
               <td>\(user.email.htmlEscaped)</td>
+              <td>\(user.role.rawValue.htmlEscaped)</td>
               <td>\((user.avatarURL ?? "—").htmlEscaped)</td>
               <td>\(user.createdAt?.ISO8601Format().htmlEscaped ?? "—")</td>
             </tr>
@@ -53,6 +54,7 @@ struct DebugController: Sendable {
                   <th>Username</th>
                   <th>Display name</th>
                   <th>Email</th>
+                  <th>Role</th>
                   <th>Avatar URL</th>
                   <th>Creado</th>
                 </tr>

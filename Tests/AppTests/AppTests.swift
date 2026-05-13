@@ -15,6 +15,5 @@ func authServiceInstantiation() async throws {
         users: FluentUserRepository(),
         sessions: FluentSessionRepository()
     )
-    _ = service
-    #expect(true)
+    #expect(type(of: service) == AuthService.self)
 }

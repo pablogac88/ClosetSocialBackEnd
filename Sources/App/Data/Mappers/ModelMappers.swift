@@ -14,7 +14,8 @@ extension UserModel {
             displayName: displayName,
             email: email,
             avatarURL: avatarURL,
-            bio: bio
+            bio: bio,
+            role: role
         )
     }
 }

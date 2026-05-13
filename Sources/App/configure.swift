@@ -18,8 +18,11 @@ public func configure(_ app: Application) throws {
 
     app.migrations.add(CreateUserMigration())
     app.migrations.add(AddBioToUserMigration())
+    app.migrations.add(AddRoleToUserMigration())
     app.migrations.add(CreateSessionMigration())
     app.migrations.add(CreateGarmentMigration())
+    app.migrations.add(CreateGarmentTypeMigration())
+    app.migrations.add(CreateBrandMigration())
     app.migrations.add(CreateOutfitMigration())
     app.migrations.add(CreateOutfitItemsMigration())
     app.migrations.add(CreatePostMigration())

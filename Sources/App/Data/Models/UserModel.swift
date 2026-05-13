@@ -25,6 +25,9 @@ final class UserModel: Model, @unchecked Sendable {
     @OptionalField(key: "bio")
     var bio: String?
 
+    @Field(key: "role")
+    var role: UserRole
+
     @Children(for: \.$user)
     var garments: [GarmentModel]
 
@@ -42,7 +45,9 @@ final class UserModel: Model, @unchecked Sendable {
         displayName: String,
         email: String,
         passwordHash: String,
-        avatarURL: String?
+        avatarURL: String?,
+        bio: String? = nil,
+        role: UserRole = .user
     ) {
         self.id = id
         self.username = username
@@ -50,5 +55,7 @@ final class UserModel: Model, @unchecked Sendable {
         self.email = email
         self.passwordHash = passwordHash
         self.avatarURL = avatarURL
+        self.bio = bio
+        self.role = role
     }
 }
