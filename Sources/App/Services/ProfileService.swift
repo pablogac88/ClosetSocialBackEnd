@@ -12,18 +12,22 @@ public struct ProfileService: Sendable {
     }
 
     public func profile(for user: User, on db: any Database) async throws -> Profile {
-        let closetCount = try await garments.countForUser(user.id, on: db)
-        let outfitCount = try await OutfitModel.query(on: db)
+        async let closetCount = garments.countForUser(user.id, on: db)
+        async let outfitCount = OutfitModel.query(on: db)
             .filter(\.$user.$id == user.id)
             .count()
-        let postsCount = try await PostModel.query(on: db)
+        async let postsCount = PostModel.query(on: db)
             .filter(\.$user.$id == user.id)
             .count()
-        return Profile(
+        async let followerCount = follows.followerCount(for: user.id, on: db)
+        async let followingCount = follows.followingCount(for: user.id, on: db)
+        return try await Profile(
             user: user,
             closetCount: closetCount,
             outfitCount: outfitCount,
-            postsCount: postsCount
+            postsCount: postsCount,
+            followerCount: followerCount,
+            followingCount: followingCount
         )
     }
 

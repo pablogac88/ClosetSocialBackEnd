@@ -50,6 +50,8 @@ func routes(_ app: Application) throws {
     protected.get("users", ":id", "profile", use: profile.publicProfile)
     protected.post("users", ":id", "follow", use: follow.follow)
     protected.delete("users", ":id", "follow", use: follow.unfollow)
+    protected.get("users", ":id", "followers", use: follow.followers)
+    protected.get("users", ":id", "following", use: follow.following)
     protected.get("search", use: search.search)
 
     let adminRoutes = app

@@ -37,4 +37,20 @@ struct FollowService: Sendable {
             .filter(\.$follower.$id == userID)
             .count()
     }
+
+    func fetchFollowers(for userID: UUID, on db: any Database) async throws -> [User] {
+        let follows = try await FollowModel.query(on: db)
+            .filter(\.$following.$id == userID)
+            .with(\.$follower)
+            .all()
+        return try follows.map { try $0.follower.toDomain() }
+    }
+
+    func fetchFollowing(for userID: UUID, on db: any Database) async throws -> [User] {
+        let follows = try await FollowModel.query(on: db)
+            .filter(\.$follower.$id == userID)
+            .with(\.$following)
+            .all()
+        return try follows.map { try $0.following.toDomain() }
+    }
 }

@@ -6,6 +6,8 @@ struct ProfileResponseDTO: Content, Sendable {
     let closetCount: Int
     let outfitCount: Int
     let postsCount: Int
+    let followerCount: Int
+    let followingCount: Int
 }
 
 struct PublicProfileResponseDTO: Content, Sendable {
@@ -25,7 +27,9 @@ extension Profile {
             user: user.toPublicDTO(),
             closetCount: closetCount,
             outfitCount: outfitCount,
-            postsCount: postsCount
+            postsCount: postsCount,
+            followerCount: followerCount,
+            followingCount: followingCount
         )
     }
 }
