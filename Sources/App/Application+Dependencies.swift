@@ -38,7 +38,7 @@ public struct AppDependencies: Sendable {
         self.adminCatalogService = AdminCatalogService()
         self.followService = FollowService()
         self.timelineService = TimelineService(garments: garmentRepository, follows: followService)
-        self.profileService = ProfileService(garments: garmentRepository, follows: followService)
+        self.profileService = ProfileService(garments: garmentRepository, follows: followService, users: userRepository)
         self.searchService = SearchService()
         self.seeder = DatabaseSeeder()
     }

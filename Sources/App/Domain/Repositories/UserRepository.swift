@@ -12,4 +12,11 @@ public protocol UserRepository: Sendable {
         avatarURL: String?,
         on db: any Database
     ) async throws -> User
+    func update(
+        id: UUID,
+        displayName: String,
+        bio: String?,
+        avatarURL: String?,
+        on db: any Database
+    ) async throws -> User
 }

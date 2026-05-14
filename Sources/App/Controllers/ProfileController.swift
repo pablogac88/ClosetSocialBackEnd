@@ -16,4 +16,11 @@ struct ProfileController: Sendable {
         }
         return try await service.publicProfile(userID: userID, currentUser: currentUser, on: req.db)
     }
+
+    func update(_ req: Request) async throws -> ProfileResponseDTO {
+        let user = try req.authenticatedUser
+        let body = try req.content.decode(UpdateProfileRequestDTO.self)
+        let profile = try await service.updateProfile(user: user, request: body, on: req.db)
+        return profile.toResponse()
+    }
 }

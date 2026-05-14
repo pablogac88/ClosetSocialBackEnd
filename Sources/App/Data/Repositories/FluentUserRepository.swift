@@ -37,4 +37,21 @@ public struct FluentUserRepository: UserRepository {
         try await model.create(on: db)
         return try model.toDomain()
     }
+
+    public func update(
+        id: UUID,
+        displayName: String,
+        bio: String?,
+        avatarURL: String?,
+        on db: any Database
+    ) async throws -> User {
+        guard let model = try await UserModel.find(id, on: db) else {
+            throw DomainError.userNotFound
+        }
+        model.displayName = displayName
+        model.bio = bio
+        model.avatarURL = avatarURL
+        try await model.update(on: db)
+        return try model.toDomain()
+    }
 }

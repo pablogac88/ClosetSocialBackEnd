@@ -21,6 +21,12 @@ struct PublicProfileResponseDTO: Content, Sendable {
     let isFollowing: Bool
 }
 
+struct UpdateProfileRequestDTO: Content, Sendable {
+    let displayName: String
+    let bio: String?
+    let avatarURL: String?
+}
+
 extension Profile {
     func toResponse() -> ProfileResponseDTO {
         ProfileResponseDTO(

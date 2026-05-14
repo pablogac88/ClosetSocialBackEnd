@@ -5,7 +5,7 @@ public struct TimelineService: Sendable {
     let garments: any GarmentRepository
     let follows: FollowService
 
-    public init(garments: any GarmentRepository, follows: FollowService) {
+    init(garments: any GarmentRepository, follows: FollowService) {
         self.garments = garments
         self.follows = follows
     }

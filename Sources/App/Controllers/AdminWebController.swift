@@ -283,6 +283,24 @@ struct AdminWebController: Sendable {
                 border-radius: var(--radius-lg);
               }
 
+              .metric-card-link {
+                display: block;
+                text-decoration: none;
+                color: inherit;
+                transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+              }
+
+              .metric-card-link:hover {
+                transform: translateY(-2px);
+                border-color: rgba(42, 92, 255, 0.26);
+                box-shadow: 0 28px 60px rgba(22, 32, 51, 0.12);
+              }
+
+              .metric-card-link:focus-visible {
+                outline: 3px solid rgba(42, 92, 255, 0.24);
+                outline-offset: 3px;
+              }
+
               .metric-label {
                 margin: 0;
                 color: var(--muted);
@@ -302,6 +320,16 @@ struct AdminWebController: Sendable {
               .metric-foot {
                 margin-top: 10px;
                 font-size: 14px;
+              }
+
+              .metric-link-copy {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 14px;
+                color: var(--accent);
+                font-size: 13px;
+                font-weight: 700;
               }
 
               .catalog-copy {
@@ -454,26 +482,30 @@ struct AdminWebController: Sendable {
                   </div>
 
                   <div class="metrics-grid">
-                    <article class="metric-card">
+                    <a class="metric-card metric-card-link" href="/debug/users">
                       <p class="metric-label">Usuarios</p>
                       <p class="metric-value" data-metric="totalUsers">-</p>
                       <p class="metric-foot">Usuarios registrados</p>
-                    </article>
-                    <article class="metric-card">
+                      <span class="metric-link-copy">Abrir listado →</span>
+                    </a>
+                    <a class="metric-card metric-card-link" href="/debug/garments">
                       <p class="metric-label">Prendas</p>
                       <p class="metric-value" data-metric="totalGarments">-</p>
                       <p class="metric-foot">Items de armario</p>
-                    </article>
-                    <article class="metric-card">
+                      <span class="metric-link-copy">Abrir listado →</span>
+                    </a>
+                    <a class="metric-card metric-card-link" href="/debug/outfits">
                       <p class="metric-label">Outfits</p>
                       <p class="metric-value" data-metric="totalOutfits">-</p>
                       <p class="metric-foot">Looks creados</p>
-                    </article>
-                    <article class="metric-card">
+                      <span class="metric-link-copy">Abrir listado →</span>
+                    </a>
+                    <a class="metric-card metric-card-link" href="/debug/posts">
                       <p class="metric-label">Posts</p>
                       <p class="metric-value" data-metric="totalPosts">-</p>
                       <p class="metric-foot">Publicaciones</p>
-                    </article>
+                      <span class="metric-link-copy">Abrir listado →</span>
+                    </a>
                     <article class="metric-card">
                       <p class="metric-label">Likes</p>
                       <p class="metric-value" data-metric="totalLikes">-</p>

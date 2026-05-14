@@ -5,10 +5,12 @@ import Vapor
 public struct ProfileService: Sendable {
     let garments: any GarmentRepository
     let follows: FollowService
+    let users: any UserRepository
 
-    init(garments: any GarmentRepository, follows: FollowService) {
+    init(garments: any GarmentRepository, follows: FollowService, users: any UserRepository) {
         self.garments = garments
         self.follows = follows
+        self.users = users
     }
 
     public func profile(for user: User, on db: any Database) async throws -> Profile {
@@ -29,6 +31,32 @@ public struct ProfileService: Sendable {
             followerCount: followerCount,
             followingCount: followingCount
         )
+    }
+
+    func updateProfile(
+        user: User,
+        request: UpdateProfileRequestDTO,
+        on db: any Database
+    ) async throws -> Profile {
+        let trimmedName = request.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            throw Abort(.unprocessableEntity, reason: "El nombre no puede estar vacío.")
+        }
+        if let bio = request.bio, bio.count > 160 {
+            throw Abort(.unprocessableEntity, reason: "La bio no puede superar los 160 caracteres.")
+        }
+        if let urlString = request.avatarURL, !urlString.isEmpty, URL(string: urlString) == nil {
+            throw Abort(.unprocessableEntity, reason: "La URL del avatar no es válida.")
+        }
+        let normalizedAvatarURL = request.avatarURL.flatMap { $0.isEmpty ? nil : $0 }
+        let updatedUser = try await users.update(
+            id: user.id,
+            displayName: trimmedName,
+            bio: request.bio.flatMap { $0.isEmpty ? nil : $0 },
+            avatarURL: normalizedAvatarURL,
+            on: db
+        )
+        return try await profile(for: updatedUser, on: db)
     }
 
     func publicProfile(
