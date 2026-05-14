@@ -38,6 +38,7 @@ struct SearchService: Sendable {
                 group.filter(\.$name, .custom("LIKE"), pattern)
                 group.filter(\.$brand, .custom("LIKE"), pattern)
                 group.filter(\.$category, .custom("LIKE"), pattern)
+                group.filter(\.$color, .custom("LIKE"), pattern)
             }
             .sort(\.$createdAt, .descending)
             .limit(Self.limit)

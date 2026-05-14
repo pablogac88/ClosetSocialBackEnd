@@ -4,9 +4,11 @@ import Vapor
 
 public struct ProfileService: Sendable {
     let garments: any GarmentRepository
+    let follows: FollowService
 
-    public init(garments: any GarmentRepository) {
+    init(garments: any GarmentRepository, follows: FollowService) {
         self.garments = garments
+        self.follows = follows
     }
 
     public func profile(for user: User, on db: any Database) async throws -> Profile {
@@ -50,12 +52,19 @@ public struct ProfileService: Sendable {
             }
         }
 
-        return PublicProfileResponseDTO(
+        async let followerCount = follows.followerCount(for: userID, on: db)
+        async let followingCount = follows.followingCount(for: userID, on: db)
+        async let isFollowing = follows.isFollowing(followerID: currentUser.id, followingID: userID, on: db)
+
+        return try await PublicProfileResponseDTO(
             user: profileUser.toPublicDTO(),
             closetCount: closetCount,
             outfitCount: outfitCount,
             postsCount: postModels.count,
-            recentPosts: recentPosts
+            recentPosts: recentPosts,
+            followerCount: followerCount,
+            followingCount: followingCount,
+            isFollowing: isFollowing
         )
     }
 }

@@ -14,6 +14,9 @@ struct PublicProfileResponseDTO: Content, Sendable {
     let outfitCount: Int
     let postsCount: Int
     let recentPosts: [FeedPostResponseDTO]
+    let followerCount: Int
+    let followingCount: Int
+    let isFollowing: Bool
 }
 
 extension Profile {
