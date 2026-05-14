@@ -21,6 +21,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(AddRoleToUserMigration())
     app.migrations.add(CreateSessionMigration())
     app.migrations.add(CreateGarmentMigration())
+    app.migrations.add(AddImageURLToGarmentMigration())
     app.migrations.add(CreateGarmentTypeMigration())
     app.migrations.add(CreateBrandMigration())
     app.migrations.add(CreateOutfitMigration())

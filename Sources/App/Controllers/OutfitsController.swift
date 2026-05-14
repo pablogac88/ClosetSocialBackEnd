@@ -20,4 +20,13 @@ struct OutfitsController: Sendable {
             on: req.db
         )
     }
+
+    func delete(_ req: Request) async throws -> HTTPStatus {
+        let user = try req.authenticatedUser
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest, reason: "ID de outfit inválido.")
+        }
+        try await service.deleteOutfit(id: id, for: user, on: req.db)
+        return .noContent
+    }
 }

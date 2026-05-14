@@ -12,6 +12,10 @@ public protocol GarmentRepository: Sendable {
         brand: String,
         category: String,
         color: String,
+        imageURL: String?,
         on db: any Database
     ) async throws -> Garment
+    func exists(id: UUID, userID: UUID, on db: any Database) async throws -> Bool
+    func delete(id: UUID, userID: UUID, on db: any Database) async throws
+    func countInOutfits(id: UUID, on db: any Database) async throws -> Int
 }

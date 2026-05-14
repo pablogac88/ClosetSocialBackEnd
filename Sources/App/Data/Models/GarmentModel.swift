@@ -19,6 +19,9 @@ final class GarmentModel: Model, @unchecked Sendable {
     @Field(key: "color")
     var color: String
 
+    @OptionalField(key: "image_url")
+    var imageURL: String?
+
     @Parent(key: "user_id")
     var user: UserModel
 
@@ -33,6 +36,7 @@ final class GarmentModel: Model, @unchecked Sendable {
         brand: String,
         category: String,
         color: String,
+        imageURL: String? = nil,
         userID: UUID
     ) {
         self.id = id
@@ -40,6 +44,7 @@ final class GarmentModel: Model, @unchecked Sendable {
         self.brand = brand
         self.category = category
         self.color = color
+        self.imageURL = imageURL
         self.$user.id = userID
     }
 }

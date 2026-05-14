@@ -61,6 +61,22 @@ struct OutfitsService: Sendable {
             createdAt: outfitModel.createdAt ?? .now
         )
     }
+
+    func deleteOutfit(id: UUID, for user: User, on db: any Database) async throws {
+        guard let outfit = try await OutfitModel.query(on: db)
+            .filter(\.$id == id)
+            .filter(\.$user.$id == user.id)
+            .first()
+        else {
+            throw Abort(.notFound, reason: "Outfit no encontrado.")
+        }
+        try await db.transaction { tx in
+            try await OutfitItemModel.query(on: tx)
+                .filter(\.$outfit.$id == id)
+                .delete()
+            try await outfit.delete(on: tx)
+        }
+    }
 }
 
 private extension String {

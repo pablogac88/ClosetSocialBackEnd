@@ -1,5 +1,6 @@
 import Fluent
 import Foundation
+import Vapor
 
 public struct FluentGarmentRepository: GarmentRepository {
     public init() {}
@@ -40,6 +41,7 @@ public struct FluentGarmentRepository: GarmentRepository {
         brand: String,
         category: String,
         color: String,
+        imageURL: String?,
         on db: any Database
     ) async throws -> Garment {
         let model = GarmentModel(
@@ -47,9 +49,34 @@ public struct FluentGarmentRepository: GarmentRepository {
             brand: brand,
             category: category,
             color: color,
+            imageURL: imageURL,
             userID: userID
         )
         try await model.create(on: db)
         return try model.toDomain()
+    }
+
+    public func exists(id: UUID, userID: UUID, on db: any Database) async throws -> Bool {
+        try await GarmentModel.query(on: db)
+            .filter(\.$id == id)
+            .filter(\.$user.$id == userID)
+            .first() != nil
+    }
+
+    public func delete(id: UUID, userID: UUID, on db: any Database) async throws {
+        guard let model = try await GarmentModel.query(on: db)
+            .filter(\.$id == id)
+            .filter(\.$user.$id == userID)
+            .first()
+        else {
+            throw Abort(.notFound, reason: "Prenda no encontrada.")
+        }
+        try await model.delete(on: db)
+    }
+
+    public func countInOutfits(id: UUID, on db: any Database) async throws -> Int {
+        try await OutfitItemModel.query(on: db)
+            .filter(\.$garment.$id == id)
+            .count()
     }
 }

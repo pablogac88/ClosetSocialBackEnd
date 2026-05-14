@@ -7,6 +7,7 @@ public struct GarmentResponseDTO: Content, Sendable {
     public let brand: String
     public let category: String
     public let color: String
+    public let imageURL: String?
     public let createdAt: Date
 }
 
@@ -16,9 +17,10 @@ struct ClosetResponseDTO: Content, Sendable {
 
 struct CreateGarmentRequestDTO: Content, Sendable {
     let name: String
-    let brand: String
+    let brand: String?
     let category: String
     let color: String
+    let imageURL: String?
 }
 
 extension Garment {
@@ -29,6 +31,7 @@ extension Garment {
             brand: brand,
             category: category,
             color: color,
+            imageURL: imageURL,
             createdAt: createdAt
         )
     }

@@ -18,8 +18,18 @@ struct ClosetController: Sendable {
             brand: body.brand,
             category: body.category,
             color: body.color,
+            imageURL: body.imageURL,
             on: req.db
         )
         return garment.toResponse()
+    }
+
+    func delete(_ req: Request) async throws -> HTTPStatus {
+        let user = try req.authenticatedUser
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest, reason: "ID de prenda inválido.")
+        }
+        try await service.deleteGarment(id: id, for: user, on: req.db)
+        return .noContent
     }
 }

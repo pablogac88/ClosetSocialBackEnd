@@ -29,6 +29,7 @@ extension GarmentModel {
             brand: brand,
             category: category,
             color: color,
+            imageURL: imageURL,
             userID: $user.id,
             createdAt: createdAt ?? .now
         )
