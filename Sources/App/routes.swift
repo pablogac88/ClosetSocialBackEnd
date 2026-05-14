@@ -35,6 +35,7 @@ func routes(_ app: Application) throws {
         .grouped(BearerAuthMiddleware(authService: deps.authService))
 
     protected.get("timeline", use: timeline.index)
+    protected.get("discover", use: timeline.discover)
     protected.get("closet", use: closet.index)
     protected.post("closet", use: closet.create)
     protected.delete("garments", ":id", use: closet.delete)

@@ -30,7 +30,6 @@ public struct AppDependencies: Sendable {
         self.garmentRepository = garmentRepository
         self.authService = AuthService(users: userRepository, sessions: sessionRepository)
         self.closetService = ClosetService(garments: garmentRepository)
-        self.timelineService = TimelineService(garments: garmentRepository)
         self.outfitsService = OutfitsService(garments: garmentRepository)
         self.postService = PostService()
         self.likeService = LikeService()
@@ -38,6 +37,7 @@ public struct AppDependencies: Sendable {
         self.adminDashboardService = AdminDashboardService()
         self.adminCatalogService = AdminCatalogService()
         self.followService = FollowService()
+        self.timelineService = TimelineService(garments: garmentRepository, follows: followService)
         self.profileService = ProfileService(garments: garmentRepository, follows: followService)
         self.searchService = SearchService()
         self.seeder = DatabaseSeeder()

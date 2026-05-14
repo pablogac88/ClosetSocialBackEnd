@@ -3,18 +3,37 @@ import Foundation
 
 public struct TimelineService: Sendable {
     let garments: any GarmentRepository
+    let follows: FollowService
 
-    public init(garments: any GarmentRepository) {
+    public init(garments: any GarmentRepository, follows: FollowService) {
         self.garments = garments
+        self.follows = follows
     }
 
+    /// Personalized feed: own posts + posts from users the current user follows.
     public func timeline(for user: User, on db: any Database) async throws -> [FeedPost] {
+        let followedUsers = try await follows.fetchFollowing(for: user.id, on: db)
+        let allowedIDs = Set([user.id] + followedUsers.map(\.id))
+
         let allGarments = try await garments.all(on: db)
-        let garmentPosts = try await composeGarmentPosts(from: allGarments, on: db)
-        let outfitPosts = try await composeOutfitPosts(on: db)
-        let realPosts = try await composeRealPosts(for: user, on: db)
+        let visibleGarments = allGarments.filter { allowedIDs.contains($0.userID) }
+
+        let garmentPosts = try await composeGarmentPosts(from: visibleGarments, on: db)
+        let outfitPosts = try await composeOutfitPosts(allowedIDs: allowedIDs, on: db)
+        let realPosts = try await composeRealPosts(for: user, allowedIDs: allowedIDs, on: db)
         return (garmentPosts + outfitPosts + realPosts).sorted { $0.createdAt > $1.createdAt }
     }
+
+    /// Global discovery feed: all users' content. Used by Explore.
+    public func globalDiscoveryTimeline(for user: User, on db: any Database) async throws -> [FeedPost] {
+        let allGarments = try await garments.all(on: db)
+        let garmentPosts = try await composeGarmentPosts(from: allGarments, on: db)
+        let outfitPosts = try await composeOutfitPosts(allowedIDs: nil, on: db)
+        let realPosts = try await composeRealPosts(for: user, allowedIDs: nil, on: db)
+        return (garmentPosts + outfitPosts + realPosts).sorted { $0.createdAt > $1.createdAt }
+    }
+
+    // MARK: - Composers
 
     private func composeGarmentPosts(from garments: [Garment], on db: any Database) async throws -> [FeedPost] {
         var posts: [FeedPost] = []
@@ -42,10 +61,14 @@ public struct TimelineService: Sendable {
         return posts
     }
 
-    private func composeOutfitPosts(on db: any Database) async throws -> [FeedPost] {
-        let outfitModels = try await OutfitModel.query(on: db)
+    /// `allowedIDs: nil` means no filter (global).
+    private func composeOutfitPosts(allowedIDs: Set<UUID>?, on db: any Database) async throws -> [FeedPost] {
+        var query = OutfitModel.query(on: db)
             .with(\.$items) { $0.with(\.$garment) }
-            .all()
+        if let ids = allowedIDs {
+            query = query.filter(\.$user.$id ~~ Array(ids))
+        }
+        let outfitModels = try await query.all()
         var posts: [FeedPost] = []
         posts.reserveCapacity(outfitModels.count)
         for outfitModel in outfitModels {
@@ -72,8 +95,13 @@ public struct TimelineService: Sendable {
         return posts
     }
 
-    private func composeRealPosts(for user: User, on db: any Database) async throws -> [FeedPost] {
-        let postModels = try await PostModel.query(on: db).all()
+    /// `allowedIDs: nil` means no filter (global).
+    private func composeRealPosts(for user: User, allowedIDs: Set<UUID>?, on db: any Database) async throws -> [FeedPost] {
+        var query = PostModel.query(on: db)
+        if let ids = allowedIDs {
+            query = query.filter(\.$user.$id ~~ Array(ids))
+        }
+        let postModels = try await query.all()
         var posts: [FeedPost] = []
         posts.reserveCapacity(postModels.count)
         for postModel in postModels {
