@@ -3,6 +3,11 @@ import Foundation
 import Vapor
 
 struct CommentService: Sendable {
+    let notifications: NotificationService
+
+    init(notifications: NotificationService = NotificationService()) {
+        self.notifications = notifications
+    }
 
     func createComment(
         for user: User,
@@ -14,11 +19,18 @@ struct CommentService: Sendable {
         guard !trimmed.isEmpty else {
             throw Abort(.badRequest, reason: "El comentario no puede estar vacío.")
         }
-        guard try await PostModel.find(postID, on: db) != nil else {
+        guard let post = try await PostModel.find(postID, on: db) else {
             throw Abort(.notFound, reason: "Post no encontrado.")
         }
         let comment = CommentModel(userID: user.id, postID: postID, text: trimmed)
         try await comment.create(on: db)
+        try await notifications.notify(
+            recipient: post.$user.id,
+            actor: user.id,
+            type: .comment,
+            postID: postID,
+            on: db
+        )
         return CommentResponseDTO(
             id: try comment.requireID(),
             author: user.toPublicDTO(),

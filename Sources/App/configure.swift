@@ -31,6 +31,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateLikeMigration())
     app.migrations.add(CreateCommentMigration())
     app.migrations.add(CreateFollowMigration())
+    app.migrations.add(CreateNotificationMigration())
 
     app.dependencies = .live
     try routes(app)

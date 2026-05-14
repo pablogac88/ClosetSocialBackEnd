@@ -13,6 +13,7 @@ public struct AppDependencies: Sendable {
     let postService: PostService
     let likeService: LikeService
     let commentService: CommentService
+    let notificationService: NotificationService
     let adminDashboardService: AdminDashboardService
     let adminCatalogService: AdminCatalogService
     public let profileService: ProfileService
@@ -32,11 +33,12 @@ public struct AppDependencies: Sendable {
         self.closetService = ClosetService(garments: garmentRepository)
         self.outfitsService = OutfitsService(garments: garmentRepository)
         self.postService = PostService()
-        self.likeService = LikeService()
-        self.commentService = CommentService()
+        self.notificationService = NotificationService()
+        self.likeService = LikeService(notifications: notificationService)
+        self.commentService = CommentService(notifications: notificationService)
         self.adminDashboardService = AdminDashboardService()
         self.adminCatalogService = AdminCatalogService()
-        self.followService = FollowService()
+        self.followService = FollowService(notifications: notificationService)
         self.timelineService = TimelineService(garments: garmentRepository, follows: followService)
         self.profileService = ProfileService(garments: garmentRepository, follows: followService, users: userRepository)
         self.searchService = SearchService()

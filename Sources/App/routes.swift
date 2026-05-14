@@ -14,6 +14,7 @@ func routes(_ app: Application) throws {
     let profile = ProfileController(service: deps.profileService)
     let follow = FollowController(service: deps.followService)
     let search = SearchController(service: deps.searchService)
+    let notifications = NotificationController(service: deps.notificationService)
     let admin = AdminController(service: deps.adminDashboardService)
     let adminCatalog = AdminCatalogController(service: deps.adminCatalogService)
     let adminWeb = AdminWebController()
@@ -61,6 +62,9 @@ func routes(_ app: Application) throws {
     protected.get("users", ":id", "followers", use: follow.followers)
     protected.get("users", ":id", "following", use: follow.following)
     protected.get("search", use: search.search)
+    protected.get("notifications", use: notifications.list)
+    protected.patch("notifications", ":id", "read", use: notifications.markRead)
+    protected.patch("notifications", "read-all", use: notifications.markAllRead)
 
     let adminRoutes = app
         .grouped("admin")

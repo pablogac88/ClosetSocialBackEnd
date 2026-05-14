@@ -2,6 +2,11 @@ import Fluent
 import Foundation
 
 struct FollowService: Sendable {
+    let notifications: NotificationService
+
+    init(notifications: NotificationService = NotificationService()) {
+        self.notifications = notifications
+    }
 
     func follow(followerID: UUID, followingID: UUID, on db: any Database) async throws {
         let existing = try await FollowModel.query(on: db)
@@ -10,6 +15,13 @@ struct FollowService: Sendable {
             .first()
         guard existing == nil else { return }
         try await FollowModel(followerID: followerID, followingID: followingID).save(on: db)
+        try await notifications.notify(
+            recipient: followingID,
+            actor: followerID,
+            type: .follow,
+            postID: nil,
+            on: db
+        )
     }
 
     func unfollow(followerID: UUID, followingID: UUID, on db: any Database) async throws {
