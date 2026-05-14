@@ -13,6 +13,9 @@ final class OutfitModel: Model, @unchecked Sendable {
     @OptionalField(key: "note")
     var note: String?
 
+    @OptionalField(key: "layout_json")
+    var layoutJSON: String?
+
     @Parent(key: "user_id")
     var user: UserModel
 
@@ -28,11 +31,13 @@ final class OutfitModel: Model, @unchecked Sendable {
         id: UUID? = nil,
         title: String?,
         note: String?,
+        layoutJSON: String? = nil,
         userID: UUID
     ) {
         self.id = id
         self.title = title
         self.note = note
+        self.layoutJSON = layoutJSON
         self.$user.id = userID
     }
 }

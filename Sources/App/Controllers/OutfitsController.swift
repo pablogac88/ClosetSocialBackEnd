@@ -17,6 +17,7 @@ struct OutfitsController: Sendable {
             title: body.title,
             note: body.note,
             garmentIDs: body.garmentIDs,
+            layoutJSON: body.layoutJSON,
             on: req.db
         )
     }

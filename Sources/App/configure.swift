@@ -26,6 +26,7 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateBrandMigration())
     app.migrations.add(CreateOutfitMigration())
     app.migrations.add(CreateOutfitItemsMigration())
+    app.migrations.add(AddLayoutJSONToOutfitMigration())
     app.migrations.add(CreatePostMigration())
     app.migrations.add(CreateLikeMigration())
     app.migrations.add(CreateCommentMigration())

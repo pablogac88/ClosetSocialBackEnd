@@ -12,6 +12,7 @@ func routes(_ app: Application) throws {
     let likes = LikeController(service: deps.likeService)
     let comments = CommentController(service: deps.commentService)
     let profile = ProfileController(service: deps.profileService)
+    let search = SearchController(service: deps.searchService)
     let admin = AdminController(service: deps.adminDashboardService)
     let adminCatalog = AdminCatalogController(service: deps.adminCatalogService)
     let adminWeb = AdminWebController()
@@ -46,6 +47,7 @@ func routes(_ app: Application) throws {
     protected.get("posts", ":id", "comments", use: comments.list)
     protected.get("profile", use: profile.show)
     protected.get("users", ":id", "profile", use: profile.publicProfile)
+    protected.get("search", use: search.search)
 
     let adminRoutes = app
         .grouped("admin")

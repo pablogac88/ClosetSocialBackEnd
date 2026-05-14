@@ -60,6 +60,7 @@ extension OutfitModel {
             title: title,
             note: note,
             garments: garmentDTOs,
+            layoutJSON: layoutJSON,
             createdAt: createdAt ?? .now
         )
     }

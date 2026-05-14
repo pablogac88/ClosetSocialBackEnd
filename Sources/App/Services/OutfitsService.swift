@@ -19,6 +19,7 @@ struct OutfitsService: Sendable {
         title: String?,
         note: String?,
         garmentIDs: [UUID],
+        layoutJSON: String?,
         on db: any Database
     ) async throws -> OutfitResponseDTO {
         guard !garmentIDs.isEmpty else {
@@ -37,6 +38,7 @@ struct OutfitsService: Sendable {
         let outfitModel = OutfitModel(
             title: title?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty,
             note: note?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty,
+            layoutJSON: layoutJSON,
             userID: user.id
         )
 
@@ -58,6 +60,7 @@ struct OutfitsService: Sendable {
             title: outfitModel.title,
             note: outfitModel.note,
             garments: orderedGarments.map { $0.toResponse() },
+            layoutJSON: outfitModel.layoutJSON,
             createdAt: outfitModel.createdAt ?? .now
         )
     }
