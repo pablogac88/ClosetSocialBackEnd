@@ -16,6 +16,7 @@ public struct AppDependencies: Sendable {
     let adminDashboardService: AdminDashboardService
     let adminCatalogService: AdminCatalogService
     public let profileService: ProfileService
+    let searchService: SearchService
     public let seeder: DatabaseSeeder
 
     public init(
@@ -36,6 +37,7 @@ public struct AppDependencies: Sendable {
         self.adminDashboardService = AdminDashboardService()
         self.adminCatalogService = AdminCatalogService()
         self.profileService = ProfileService(garments: garmentRepository)
+        self.searchService = SearchService()
         self.seeder = DatabaseSeeder()
     }
 
