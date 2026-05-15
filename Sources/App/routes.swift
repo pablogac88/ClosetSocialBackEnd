@@ -23,15 +23,18 @@ func routes(_ app: Application) throws {
     app.get(use: health.welcome)
     app.get("health", use: health.health)
     app.get("admin", use: adminWeb.index)
-    app.get("debug", use: debug.index)
-    app.get("debug", "users", use: debug.users)
-    app.get("debug", "users", ":id", use: debug.userDetail)
-    app.get("debug", "garments", use: debug.garments)
-    app.get("debug", "garments", ":id", use: debug.garmentDetail)
-    app.get("debug", "outfits", use: debug.outfits)
-    app.get("debug", "outfits", ":id", use: debug.outfitDetail)
-    app.get("debug", "posts", use: debug.posts)
-    app.get("debug", "posts", ":id", use: debug.postDetail)
+
+    if !app.environment.isRelease {
+        app.get("debug", use: debug.index)
+        app.get("debug", "users", use: debug.users)
+        app.get("debug", "users", ":id", use: debug.userDetail)
+        app.get("debug", "garments", use: debug.garments)
+        app.get("debug", "garments", ":id", use: debug.garmentDetail)
+        app.get("debug", "outfits", use: debug.outfits)
+        app.get("debug", "outfits", ":id", use: debug.outfitDetail)
+        app.get("debug", "posts", use: debug.posts)
+        app.get("debug", "posts", ":id", use: debug.postDetail)
+    }
 
     let authGroup = app.grouped("auth")
     authGroup.post("register", use: auth.register)
