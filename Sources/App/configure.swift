@@ -4,6 +4,9 @@ import FluentSQLiteDriver
 import Vapor
 
 public func configure(_ app: Application) throws {
+    app.http.server.configuration.hostname = Environment.get("HOST") ?? "0.0.0.0"
+    app.http.server.configuration.port = Environment.get("PORT").flatMap(Int.init) ?? 8080
+
     let jsonEncoder = JSONEncoder()
     jsonEncoder.dateEncodingStrategy = .iso8601
 
@@ -12,6 +15,9 @@ public func configure(_ app: Application) throws {
 
     ContentConfiguration.global.use(encoder: jsonEncoder, for: .json)
     ContentConfiguration.global.use(decoder: jsonDecoder, for: .json)
+
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    app.routes.defaultMaxBodySize = "8mb"
 
     let databasePath = app.directory.workingDirectory + "closet-social.sqlite"
     app.databases.use(.sqlite(.file(databasePath)), as: .sqlite)
